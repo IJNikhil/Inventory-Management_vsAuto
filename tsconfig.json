@@ -1,3 +1,61 @@
+// {
+//   "compilerOptions": {
+//     "target": "es2017",
+//     "lib": ["es2017", "es2018", "es2019"],
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "esModuleInterop": true,
+//     "allowSyntheticDefaultImports": true,
+//     "strict": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "moduleResolution": "node",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": true,
+//     "jsx": "react-native",
+//     "baseUrl": ".",
+//     "paths": {
+//       "../*": ["src/*"]
+//     },
+//     "types": ["nativewind/types"]
+//   },
+//   "include": [
+//     "src",
+//     "nativewind-env.d.ts",
+//     "App.tsx",
+//     "App.js",
+//     "index.js"
+//   ],
+//   "exclude": [
+//     "node_modules",
+//     "android",
+//     "ios",
+//     "**/*.test.ts",
+//     "**/*.test.tsx"
+//   ]
+// }
+
 {
-  "extends": "@react-native/typescript-config"
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["es2017", "es2018", "es2019", "dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-native",
+    "baseUrl": ".",
+    "paths": {
+      "../*": ["src/*"]
+    },
+    "types": ["node"] // REMOVE "nativewind/types"
+  },
+  "include": ["src"], // REMOVE "nativewind-env.d.ts"
+  "exclude": ["node_modules", "android", "ios", "**/*.test.*"]
 }

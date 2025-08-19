@@ -1,28 +1,120 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// App.tsx
+import 'react-native-get-random-values'; // ✅ MUST be the very first import to fix UUID error
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ThemeProvider } from './src/context/ThemeContext';
+import AppNavigator from './src/navigation/AppNavigator';
+import { ReduxProvider } from './src/lib/redux/redux-provider';
+import { useAppDispatch } from './src/lib/redux/hooks';
+import { initializeAuth } from './src/lib/redux/slices/auth-slice';
+import { initializeDatabase } from './src/lib/database/connection';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+function RootApp() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Initialize local database first
+        await initializeDatabase();
+        console.log('✅ Local database initialized');
+        
+        // Initialize authentication (restore session)
+        await dispatch(initializeAuth()).unwrap();
+        console.log('✅ Auth initialized');
+        
+      } catch (error) {
+        console.error('❌ App initialization error:', error);
+      }
+    };
+    
+    initializeApp();
+  }, [dispatch]);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <>
+      <StatusBar barStyle="dark-content" />
+      <AppNavigator />
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ReduxProvider>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <NavigationContainer>
+              <RootApp />
+            </NavigationContainer>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </ReduxProvider>
+    </GestureHandlerRootView>
+  );
+}
 
-export default App;
+
+
+// import React, { useEffect } from 'react';
+// import { StatusBar } from 'react-native';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
+// import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import { ThemeProvider } from './src/context/ThemeContext';
+// import AppNavigator from './src/navigation/AppNavigator';
+// import { ReduxProvider } from './src/lib/redux/redux-provider';
+// import { useAppDispatch } from './src/lib/redux/hooks';
+// import { authActions } from './src/lib/redux/slices/auth-slice';
+// import { initializeDatabase } from './src/lib/localDb';
+
+// function RootApp() {
+//   const dispatch = useAppDispatch();
+
+//   useEffect(() => {
+//     const initializeApp = async () => {
+//       try {
+//         // Initialize local database
+//         await initializeDatabase();
+//         console.log('✅ Local database initialized');
+        
+//         // Initialize authentication (restore session)
+//         dispatch(authActions.initialize());
+//         console.log('✅ Auth initialized');
+        
+//       } catch (error) {
+//         console.error('❌ App initialization error:', error);
+//       }
+//     };
+    
+//     initializeApp();
+//   }, [dispatch]);
+
+//   return (
+//     <>
+//       <StatusBar barStyle="dark-content" />
+//       <AppNavigator />
+//     </>
+//   );
+// }
+
+// export default function App() {
+//   return (
+//     <GestureHandlerRootView style={{ flex: 1 }}>
+//       <ReduxProvider>
+//         <SafeAreaProvider>
+//           <ThemeProvider>
+//             <NavigationContainer>
+//               <RootApp />
+//             </NavigationContainer>
+//           </ThemeProvider>
+//         </SafeAreaProvider>
+//       </ReduxProvider>
+//     </GestureHandlerRootView>
+//   );
+// }
